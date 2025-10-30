@@ -2,24 +2,25 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[DisallowMultipleComponent]
 public class InputReader : MonoBehaviour, Controls.IPlayerActions
 {
     public Vector2 MovementValue { get; private set; }
     public bool IsShooting { get; private set; }
     public event Action DodgeEvent;
     public event Action ReloadEvent;
-    private Controls m_controls;
+    private Controls _controls;
 
     private void Start()
     {
-        m_controls = new Controls();
-        m_controls.Player.SetCallbacks(this);
-        m_controls.Player.Enable();
+        _controls = new Controls();
+        _controls.Player.SetCallbacks(this);
+        _controls.Player.Enable();
     }
 
     private void OnDestroy()
     {
-        m_controls.Player.Disable();
+        _controls.Player.Disable();
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -49,7 +50,7 @@ public class InputReader : MonoBehaviour, Controls.IPlayerActions
         if (!context.performed) { return; }
         DodgeEvent?.Invoke();
     }
-    
+
     public void OnReload(InputAction.CallbackContext context)
     {
         if (!context.performed) { return; }
