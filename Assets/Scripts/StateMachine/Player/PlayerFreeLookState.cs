@@ -15,6 +15,7 @@ public class PlayerFreeLookState : PlayerBaseState
     public override void Enter()
     {
         StateMachine.InputReader.DodgeEvent += OnDodge;
+        StateMachine.InputReader.ReloadEvent += OnReload;
 
         StateMachine.Animator.SetFloat(FREE_LOOK_SPEED_HASH, 0f);
         if (_shouldFade)
@@ -29,6 +30,12 @@ public class PlayerFreeLookState : PlayerBaseState
 
     public override void Tick(float deltaTime)
     {
+        if (StateMachine.InputReader.IsShooting)
+        {
+            StateMachine.SwitchState(new PlayerShootState(StateMachine));
+            return;
+        }
+        
         Vector3 movement = CalculateMovement();
         Move(movement * StateMachine.FreeLookMoveSpeed, deltaTime);
         if (StateMachine.InputReader.MovementValue == Vector2.zero)
@@ -49,6 +56,11 @@ public class PlayerFreeLookState : PlayerBaseState
     private void OnDodge()
     {
         StateMachine.SwitchState(new PlayerDodgeState(StateMachine));
+    }
+
+    private void OnReload()
+    {
+        StateMachine.SwitchState(new PlayerReloadState(StateMachine));
     }
 
     private Vector3 CalculateMovement()
