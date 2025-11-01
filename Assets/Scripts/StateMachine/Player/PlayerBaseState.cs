@@ -18,5 +18,10 @@ public abstract class PlayerBaseState : State
     {
         Move(Vector3.zero, deltaTime);
     }
+
+    protected void ReturnToLocomotion()
+    {
+        StateMachine.SwitchState(new PlayerFreeLookState(StateMachine, false));
+    }
     
 }
